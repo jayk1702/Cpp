@@ -1,4 +1,4 @@
-//comment
+
 /* 1. C++ program  to Create Custom function for strlen, strcpy, strchr, strstr  eg: create functions mystrlen, mystrcpy which behaves in  
      same manner as these library functions*/
 										
