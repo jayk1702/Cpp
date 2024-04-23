@@ -29,7 +29,9 @@ public:
         marks = Marks1;
     }
     
-    
+    ~Student() {
+        delete[] name;
+    }
     
     void display() const {
         cout << "Roll No: " << rollNo << endl;
