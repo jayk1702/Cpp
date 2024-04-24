@@ -10,6 +10,8 @@ sort the vector according to name.*/
 #include <vector>
 #include <map>
 #include <cstring>
+#include <algorithm>
+
 using namespace std;
 
 class Student {
@@ -18,18 +20,38 @@ private:
     int age;
     char sex;
     char* name;
-    map<string, int> marks;
+    
 
 public:
     // Constructor
-    //Student(){}
-    Student(int Roll1, int Age1, char Sex1, const char* Name1, map<string, int>& Marks1) : rollNo(Roll1), age(Age1), sex(Sex1) {
-         name = new char[strlen(Name1)+1];
-        strcpy(name,Name1);
-        marks = Marks1;
+    map<string, int> marks;
+    Student(int RollNo, int Age, char Sex, const char* Name) : rollNo(RollNo), age(Age), sex(Sex) {
+        name = new char[strlen(Name) + 1];
+        strcpy(name, Name);
+        // Initialize marks with default values
+        marks["English"] = 0;
+        marks["Maths"] = 0;
+        marks["Science"] = 0;
+        marks["History"] = 0;
+        marks["Geography"] = 0;
     }
-    
-    
+
+    // Destructor to free dynamically allocated memory
+    ~Student() {
+        delete[] name;
+    }
+
+    // Function to set marks for a subject
+    void setMark(const string& subject, int mark) {
+        marks[subject] = mark;
+    }
+
+    // Function to get the name of the student
+    const char* getName() const {
+        return name;
+    }
+
+    // Function to display student information
     void display() const {
         cout << "Roll No: " << rollNo << endl;
         cout << "Name: " << name << endl;
@@ -41,38 +63,49 @@ public:
         }
         cout << endl;
     }
-	/*~Student() {
-        delete[] name;
-    }*/
-
 };
 
-int main() {
-    std::vector<Student> students;
-    
-    map<string, int> S1_marks = {{"English", 50}, {"Maths", 80}, {"Science", 70}, {"History", 60}, {"Geography", 40}};
-    map<string, int> S2_marks = {{"English", 70}, {"Maths", 65}, {"Science", 96}, {"History", 87}, {"Geography", 78}};
-    map<string, int> S3_marks = {{"English", 60}, {"Maths", 43}, {"Science", 86}, {"History", 30}, {"Geography", 94}};
-    map<string, int> S4_marks = {{"English", 90}, {"Maths", 48}, {"Science", 46}, {"History", 76}, {"Geography", 45}};
-    map<string, int> S5_marks = {{"English", 43}, {"Maths", 42}, {"Science", 35}, {"History", 63}, {"Geography", 38}};
-    map<string, int> S6_marks = {{"English", 76}, {"Maths", 79}, {"Science", 43}, {"History", 68}, {"Geography", 79}};
-    map<string, int> S7_marks = {{"English", 56}, {"Maths", 68}, {"Science", 83}, {"History", 47}, {"Geography", 84}};
-    map<string, int> S8_marks = {{"English", 82}, {"Maths", 28}, {"Science", 45}, {"History", 57}, {"Geography", 38}};
-    map<string, int> S9_marks = {{"English", 43}, {"Maths", 83}, {"Science", 49}, {"History", 59}, {"Geography", 72}};
-    map<string, int> S10_marks = {{"English", 79}, {"Maths", 75}, {"Science", 61}, {"History", 91}, {"Geography", 62}};
+// Comparator function for sorting students by name
+bool compareByName(const Student& s1, const Student& s2) {
+    return strcmp(s1.getName(), s2.getName()) < 0;
+}
 
-    // Add 10 students to the vector
-    students.push_back(Student(1, 18, 'M', "Kohli", S1_marks));
-    students.push_back(Student(2, 20, 'M', "Itachi", S1_marks));
-    students.push_back(Student(3, 19, 'M', "Messi", S1_marks));
-    students.push_back(Student(4, 19, 'F', "Nami", S4_marks));
-    students.push_back(Student(5, 20, 'M', "Zoro", S5_marks));
-    students.push_back(Student(6, 21, 'F', "NicoRobin", S6_marks));
-    students.push_back(Student(7, 22, 'M', "Luffy", S7_marks));
-    students.push_back(Student(8, 19, 'F', "Boa", S8_marks));
-    students.push_back(Student(9, 20, 'M', "Naruto", S9_marks));
-    students.push_back(Student(10, 21, 'F', "Hinata", S10_marks));
-    
+int main() {
+    // Vector to store students
+    vector<Student> students;
+
+    // Input marks for 10 students
+    for (int i = 0; i < 10; ++i) {
+        int rollNo, age;
+        char sex, name[50];
+        cout << "Enter details for Student " << i + 1 << ":" << endl;
+        cout << "Roll No: ";
+        cin >> rollNo;
+        cout << "Name: ";
+        cin >> name;
+        cout << "Age: ";
+        cin >> age;
+        cout << "Sex (M/F): ";
+        cin >> sex;
+
+        // Create a student object and add it to the vector
+        students.push_back(Student(rollNo, age, sex, name));
+
+        // Input marks for each subject
+        for (auto& student : students.back().marks) {
+            string subject;
+            int mark;
+            cout << "Enter marks for " << student.first << ": ";
+            cin >> mark;
+            student.second = mark;
+        }
+    }
+
+    // Sort the vector according to name
+    sort(students.begin(), students.end(), compareByName);
+
+    // Display student information after sorting
+    cout << "Student information after sorting by name:" << endl;
     for (const auto& student : students) {
         student.display();
     }
