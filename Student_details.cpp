@@ -23,8 +23,9 @@ private:
     
 
 public:
-    // Constructor
+    
     map<string, int> marks;
+// Constructor
     Student(int RollNo, int Age, char Sex, const char* Name) : rollNo(RollNo), age(Age), sex(Sex) {
         name = new char[strlen(Name) + 1];
         strcpy(name, Name);
@@ -36,22 +37,21 @@ public:
         marks["Geography"] = 0;
     }
 
-    // Destructor to free dynamically allocated memory
+    // Destructor
     ~Student() {
         delete[] name;
     }
 
-    // Function to set marks for a subject
-    void setMark(const string& subject, int mark) {
+        void setMark(const string& subject, int mark) {
         marks[subject] = mark;
     }
 
-    // Function to get the name of the student
+    
     const char* getName() const {
         return name;
     }
 
-    // Function to display student information
+    
     void display() const {
         cout << "Roll No: " << rollNo << endl;
         cout << "Name: " << name << endl;
@@ -65,16 +65,13 @@ public:
     }
 };
 
-// Comparator function for sorting students by name
 bool compareByName(const Student& s1, const Student& s2) {
     return strcmp(s1.getName(), s2.getName()) < 0;
 }
 
 int main() {
-    // Vector to store students
     vector<Student> students;
 
-    // Input marks for 10 students
     for (int i = 0; i < 10; ++i) {
         int rollNo, age;
         char sex, name[50];
@@ -88,10 +85,8 @@ int main() {
         cout << "Sex (M/F): ";
         cin >> sex;
 
-        // Create a student object and add it to the vector
         students.push_back(Student(rollNo, age, sex, name));
 
-        // Input marks for each subject
         for (auto& student : students.back().marks) {
             string subject;
             int mark;
@@ -101,10 +96,8 @@ int main() {
         }
     }
 
-    // Sort the vector according to name
     sort(students.begin(), students.end(), compareByName);
 
-    // Display student information after sorting
     cout << "Student information after sorting by name:" << endl;
     for (const auto& student : students) {
         student.display();
